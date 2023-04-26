@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "642534446182",
+    "firebase_url": "https://surveyapp-837e7-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "surveyapp-837e7",
+    "storage_bucket": "surveyapp-837e7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:642534446182:android:659edd4c904c3bc61c89a7",
+        "android_client_info": {
+          "package_name": "com.example.surveyapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "642534446182-3coqi3sv79p5kurrkkepf5ju54br6kbs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOOdae88WVi0wXTr_LIHo5s4x-dcEpb0k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "642534446182-3coqi3sv79p5kurrkkepf5ju54br6kbs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
