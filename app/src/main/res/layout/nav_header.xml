@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:maxWidth="50dp"
     android:background="@color/light_green">
 
 <!--    <de.hdodenhof.circleimageview.CircleImageView-->
@@ -15,8 +16,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Andeea Ciurescu"
-        android:id="@+id/user_name"
+        android:text="Cineva"
+        android:id="@+id/userName"
         android:paddingTop="10dp"
 
         android:paddingStart="16dp"
@@ -25,6 +26,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/userEmail"
         android:textSize="16sp"
         android:paddingStart="16dp"
         android:text="andreea.ciurescu@yahoo.com"/>

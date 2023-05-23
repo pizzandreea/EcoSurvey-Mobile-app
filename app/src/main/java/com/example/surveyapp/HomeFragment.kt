@@ -9,15 +9,7 @@ import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
-    // TODO: Rename and change types of parameters
-//    private var param1: String? = null
-//    private var param2: String? = null
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//
-//
-//    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

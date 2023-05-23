@@ -75,6 +75,7 @@ class LoginActivity : AppCompatActivity() {
                                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                                 intent.putExtra("phone", phoneText)
                                 startActivity(intent)
+                                finish()
                             }
                             else {
                                 Toast.makeText(this@LoginActivity, "Wrong password", Toast.LENGTH_SHORT).show()
