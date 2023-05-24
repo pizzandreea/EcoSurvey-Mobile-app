@@ -9,16 +9,37 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/light_green"
+        android:padding="10dp"
         >
+
+        <TextView
+            android:id="@+id/tfullName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Full Name:"
+            android:textSize="24sp"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/fullName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
             android:text="Cineva"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="24sp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@+id/tfullName"
             app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/temail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email:"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tfullName" />
 
         <TextView
             android:id="@+id/email"
@@ -26,16 +47,37 @@
             android:layout_height="wrap_content"
             android:text="Email"
             android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@+id/temail"
             app:layout_constraintTop_toBottomOf="@+id/fullName" />
         <TextView
-            android:id="@+id/score"
+            android:id="@+id/tscore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Score"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/email" />
+
+        <TextView
+            android:id="@+id/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Score"
+            android:textSize="24sp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@+id/tscore"
+            app:layout_constraintTop_toBottomOf="@+id/email" />
+
+        <Button
+            android:id="@+id/shareButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="476dp"
+            android:text="Share your account"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

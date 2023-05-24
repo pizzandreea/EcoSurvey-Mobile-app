@@ -61,8 +61,12 @@ class MainActivity : AppCompatActivity() {
         drawerLayout = findViewById(R.id.drawerLayout)
 
         var navView : NavigationView = findViewById(R.id.nav_view)
+        var bundle = Bundle()
 
-        database?.reference?.child("users")?.addListenerForSingleValueEvent(object : ValueEventListener {
+        Log.d("userPhone", userPhone)
+
+        val myRef = database?.reference?.child("users")
+            val valueEventListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.hasChild(userPhone)){
                     fullName = snapshot.child(userPhone).child("fullName").value.toString()
@@ -73,6 +77,12 @@ class MainActivity : AppCompatActivity() {
                     val userFullName = headerView.findViewById(R.id.userName) as TextView
                     val userEmail = headerView.findViewById(R.id.userEmail) as TextView
 
+                    bundle = Bundle()
+                    bundle.putString("fullName", fullName)
+                    bundle.putString("email", email)
+                    bundle.putString("score", score)
+
+
                     userFullName.setText(fullName)
                     userEmail.setText(email)
                 }
@@ -82,7 +92,9 @@ class MainActivity : AppCompatActivity() {
             override fun onCancelled(error: DatabaseError) {
                 Log.e(ContentValues.TAG, "onCancelled: ", error.toException())
             }
-        })
+        }
+
+        myRef?.addValueEventListener(valueEventListener)
 
         replaceFragment(HomeFragment(), "Home")
 
@@ -114,7 +126,11 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.navProfile-> {
-                    replaceFragment(ProfileFragment(), it.title.toString())
+                    // i want to send the user data to the profile fragment
+                    val fragment = ProfileFragment()
+                    fragment.arguments = bundle
+
+                    replaceFragment(fragment, it.title.toString())
                     true
                 }
                 R.id.navLogout-> {

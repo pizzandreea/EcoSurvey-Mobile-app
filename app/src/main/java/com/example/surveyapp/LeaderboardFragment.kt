@@ -1,6 +1,8 @@
 package com.example.surveyapp
 
+import android.content.ContentValues
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.surveyapp.Classes.UserAdapter
 import com.example.surveyapp.Classes.UserData
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -24,6 +30,7 @@ class LeaderboardFragment : Fragment() {
     lateinit var imageId : Array<Int>
     lateinit var name : Array<String>
     lateinit var score : Array<Int>
+    private var database: FirebaseDatabase? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,31 +51,60 @@ class LeaderboardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        addDataTpList()
-        val layoutManager = LinearLayoutManager(context)
+//        addDataTpList()
+        mList = arrayListOf<UserData>()
+        try {
+            database = FirebaseDatabase.getInstance("https://surveyapp-837e7-default-rtdb.europe-west1.firebasedatabase.app/")
+        }
+        catch (e: Exception) {
+            Log.e(ContentValues.TAG, "onCreate: ", e)
+        }
+        val myRef = database?.reference?.child("users")
+        val valueEventListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (ds in snapshot.children) {
+                    Log.d("TAGfullnameleaderboard", ds.child("fullName").value.toString())
+                    val name = ds.child("fullName").value.toString()
+                    val score = ds.child("score").value.toString().toInt()
+                    val imageId = R.drawable.profile1
+                    mList.add(UserData(name, imageId, score))
+                    Log.d("TAGmList", mList.toString())
+                }
+                mList.sortByDescending { it.score }
+                val layoutManager = LinearLayoutManager(context)
 
-        recyclerView = view.findViewById(R.id.recycleViewLeaderboard)
-        searchView = view.findViewById(R.id.searchViewLeaderboard)
+                recyclerView = view.findViewById(R.id.recycleViewLeaderboard)
+                searchView = view.findViewById(R.id.searchViewLeaderboard)
 
-        recyclerView.layoutManager = layoutManager
-        recyclerView.setHasFixedSize(true)
+                recyclerView.layoutManager = layoutManager
+                recyclerView.setHasFixedSize(true)
 
-        adapter = UserAdapter(mList)
-        recyclerView.adapter = adapter
+                adapter = UserAdapter(mList)
+                recyclerView.adapter = adapter
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
+                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        return false
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        filterList(newText)
+                        return true
+                    }
+
+
+
+                })
             }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                filterList(newText)
-                return true
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(ContentValues.TAG, "onCancelled: ", error.toException())
             }
+        }
+        myRef?.addListenerForSingleValueEvent(valueEventListener)
 
 
 
-        })
 
 
     }
