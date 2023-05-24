@@ -12,11 +12,13 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import com.example.surveyapp.Session.LoginPref
 import com.example.surveyapp.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,15 +31,22 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fullName: String
     private lateinit var email: String
     private lateinit var score: String
+    lateinit var session: LoginPref
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
 
+        session = LoginPref(this)
+
+        getFCMToken()
         //getting the user phone number from shared preferences
         val userPhone = intent.getStringExtra("phone").toString()
 
+        session.checkLogin()
+
+        var user: HashMap<String, String> = session.getUserDetails()
 
         //getting all data from the user in the database
         try {
@@ -46,13 +55,6 @@ class MainActivity : AppCompatActivity() {
         catch (e: Exception) {
             Log.e(ContentValues.TAG, "onCreate: ", e)
         }
-
-//if the user is not logged in, redirect to login activity
-//        if (userPhone == null) {
-//            val intent = Intent(this, LoginActivity::class.java)
-//            startActivity(intent)
-//        }
-
 
         binding = ActivityMainBinding.inflate(layoutInflater)
 
@@ -121,6 +123,7 @@ class MainActivity : AppCompatActivity() {
                     editor.clear()
                     editor.apply()
                     val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                    session.logoutUser()
                     startActivity(intent)
                     true
                 }
@@ -154,5 +157,14 @@ class MainActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun getFCMToken(){
+        Firebase.messaging.token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                Log.d(ContentValues.TAG, "Token: $token")
+            }
+        }
     }
 }

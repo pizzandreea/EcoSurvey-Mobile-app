@@ -2,28 +2,47 @@ package com.example.surveyapp
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.util.Base64
 import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.example.surveyapp.Session.LoginPref
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
+import kotlin.math.sign
 
 class LoginActivity : AppCompatActivity() {
 
 
     private var database : FirebaseDatabase? = null
+    lateinit var session : LoginPref
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        printHashKey()
+
+        session = LoginPref(this)
+        if(session.isLoggedIn()){
+            var i : Intent = Intent(applicationContext, MainActivity::class.java)
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(i)
+            finish()
+        }
 
         try {
             database = FirebaseDatabase.getInstance("https://surveyapp-837e7-default-rtdb.europe-west1.firebasedatabase.app/")
@@ -31,6 +50,7 @@ class LoginActivity : AppCompatActivity() {
         catch (e: Exception) {
             Log.e(ContentValues.TAG, "onCreate: ", e)
         }
+
 
         val registerText: TextView = findViewById(R.id.registerNowBtn)
 
@@ -53,6 +73,7 @@ class LoginActivity : AppCompatActivity() {
             val passwordText = password.text.toString()
 
             if (phoneText.isEmpty() || passwordText.isEmpty()) {
+
                 Toast.makeText(this, "Please enter phone/password", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -71,7 +92,7 @@ class LoginActivity : AppCompatActivity() {
                                 editor.apply()
 
 
-
+                                session.createLoginSession(phoneText)
                                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                                 intent.putExtra("phone", phoneText)
                                 startActivity(intent)
@@ -92,6 +113,24 @@ class LoginActivity : AppCompatActivity() {
                 })
             }
 
+        }
+    }
+
+    fun printHashKey() {
+        try {
+            val info: PackageInfo = this.packageManager.getPackageInfo(this.packageName, PackageManager.GET_SIGNATURES)
+            for (signature in info.signatures){
+                val md: MessageDigest = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                val hashKey = String(Base64.encode(md.digest(),0))
+                Log.d(TAG, "printHashKey() Hash Key: $hashKey")
+            }
+        }
+        catch (e: NoSuchAlgorithmException){
+            Log.d(TAG, "printHashKey()", e )
+        }
+        catch (e: Exception){
+            Log.d(TAG, "printHashKey()", e )
         }
     }
 }
