@@ -40,13 +40,28 @@ class MainActivity : AppCompatActivity() {
 
         session = LoginPref(this)
 
-        getFCMToken()
-        //getting the user phone number from shared preferences
-        val userPhone = intent.getStringExtra("phone").toString()
-
         session.checkLogin()
 
-        var user: HashMap<String, String> = session.getUserDetails()
+        val user: HashMap<String, String> = session.getUserDetails()
+
+        var userPhone = user[LoginPref.KEY_PHONE]
+
+        getFCMToken()
+        //getting the user phone number from shared preferences
+        if (intent.getStringExtra("phone") != null)
+            userPhone = intent.getStringExtra("phone").toString()
+        else
+        if(session.isLoggedIn())
+            userPhone = user[LoginPref.KEY_PHONE]
+
+        if(userPhone == null)
+        {
+            session.logoutUser()
+            finish()
+
+        }
+
+
 
         //getting all data from the user in the database
         try {
@@ -63,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         var navView : NavigationView = findViewById(R.id.nav_view)
         var bundle = Bundle()
 
-        Log.d("userPhone", userPhone)
+        Log.d("userPhone", userPhone!!)
 
         val myRef = database?.reference?.child("users")
             val valueEventListener = object : ValueEventListener {
@@ -114,7 +129,7 @@ class MainActivity : AppCompatActivity() {
 
 
         navView.setNavigationItemSelectedListener {
-            it.isChecked=true
+//            it.isChecked=true
 
             when (it.itemId) {
                 R.id.navHome -> {
@@ -122,15 +137,18 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.navLeaderboard -> {
+
                     replaceFragment(LeaderboardFragment(), it.title.toString())
                     true
                 }
                 R.id.navProfile-> {
+                    navView.checkedItem?.isChecked = false
                     // i want to send the user data to the profile fragment
                     val fragment = ProfileFragment()
                     fragment.arguments = bundle
 
                     replaceFragment(fragment, it.title.toString())
+                    it.isChecked = true
                     true
                 }
                 R.id.navLogout-> {
@@ -143,11 +161,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
-//                    R.id.navSurveys -> {
-//                        val intent = Intent(this@HomeActivity, SurveysCompletedActivity::class.java)
-//                        startActivity(intent)
-//                        true
-//                    }
+                    R.id.navSurveys -> {
+                        replaceFragment(SurveysFragment(), it.title.toString())
+                        true
+                    }
 //                    R.id.navQuizzes-> {
 //                        val intent = Intent(this@HomeActivity, MainActivity::class.java)
 //                        startActivity(intent)

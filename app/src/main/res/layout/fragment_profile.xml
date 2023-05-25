@@ -54,7 +54,7 @@
             android:id="@+id/tscore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Score"
+            android:text="Score:"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/email" />
@@ -68,6 +68,15 @@
             android:layout_marginStart="10dp"
             app:layout_constraintStart_toEndOf="@+id/tscore"
             app:layout_constraintTop_toBottomOf="@+id/email" />
+
+        <Button
+            android:id="@+id/editButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit you account"
+            app:layout_constraintBottom_toTopOf="@+id/shareButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/shareButton"

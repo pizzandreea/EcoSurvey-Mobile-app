@@ -92,7 +92,7 @@ class LoginActivity : AppCompatActivity() {
                                 editor.apply()
 
 
-                                session.createLoginSession(phoneText)
+                                session.createLoginSession(phoneText, passwordText)
                                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                                 intent.putExtra("phone", phoneText)
                                 startActivity(intent)

@@ -15,6 +15,7 @@ class ProfileFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
     }
 
     override fun onCreateView(
@@ -38,17 +39,21 @@ class ProfileFragment : Fragment() {
         emailText.text = email
         scoreText.text = score
 
-//        val shareButton :Button = view.findViewById<Button>(R.id.shareButton)
-//        shareButton.setOnClickListener {
-//            val sendIntent: Intent = Intent().apply {
-//                action = Intent.ACTION_SEND
-//                putExtra(Intent.EXTRA_TEXT, "I have scored $score points in the Survey App!")
-//                type = "text/plain"
-//            }
-//
-//            val shareIntent = Intent.createChooser(sendIntent, null)
-//            startActivity(shareIntent)
-//        }
+        val shareButton :Button = view.findViewById<Button>(R.id.shareButton)
+
+        val url = "https://www.youtube.com/watch?v=Dg0IjOzopYU&ab_channel=Luigi"
+
+        shareButton.setOnClickListener {
+            //intent to share
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/plain"
+            intent.putExtra("Share this", url)
+
+            val chooser = Intent.createChooser(intent, "Share this using: ")
+            startActivity(chooser)
+
+
+        }
 
 
         return view

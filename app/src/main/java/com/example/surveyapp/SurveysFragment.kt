@@ -1,32 +1,26 @@
 package com.example.surveyapp
 
+import android.animation.ObjectAnimator
+import android.animation.TimeInterpolator
+import android.content.Intent
 import android.os.Bundle
+import android.util.Property
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.LinearInterpolator
+import android.widget.Button
+import android.widget.TextView
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SurveysFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class SurveysFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var revealButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
+
     }
 
     override fun onCreateView(
@@ -34,26 +28,37 @@ class SurveysFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_surveys, container, false)
+        val view = inflater.inflate(R.layout.fragment_surveys, container, false)
+
+        val button = view.findViewById<View>(R.id.blockView)
+        button.setOnClickListener {
+            animate(button, View.ALPHA, 1.0f, 0.0f, 500, LinearInterpolator())
+            animate(
+                button,
+                View.TRANSLATION_Y,
+                button.translationY,
+                button.translationY + 100f,
+                500,
+                DecelerateInterpolator()
+            )
+
+        }
+
+
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SurveysFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SurveysFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    fun animate(button : View, property : Property<View, Float>, from : Float, to : Float,
+                duration : Long, interpolator : TimeInterpolator) {
+
+            val tY = ObjectAnimator.ofFloat(button, property, from, to)
+
+            tY.duration = duration
+            tY.interpolator = interpolator
+            tY.start()
+
+
+
     }
+
 }
